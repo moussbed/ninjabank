@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  consul-server:
+    image: docker.io/bitnami/consul:1
+    volumes:
+      - consul_data:/bitnami/consul
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
+      - '8600:8600/udp'
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3.9.11-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+#    environment:
+#      - RABBITMQ_USER_UID=${UID}
+#      - RABBITMQ_USER_GID=${GID}
+
+  backend-service:
+    image: moussbed/service-backend:0.0.1-SNAPSHOT
+    ports:
+      - "8000:8000"
+    depends_on:
+      - consul-server
+
+  gateway-service:
+    image: moussbed/service-gateway:0.0.1-SNAPSHOT
+    ports:
+      - "8080:8080"
+    depends_on:
+      - consul-server
+
+  email-notification-service:
+    image: moussbed/email-notification:3.0
+    ports:
+      - "8100:80"
+    depends_on:
+      - consul-server
+      - rabbitmq
+
+  transaction-service:
+    image: moussbed/service-transaction:0.0.1-SNAPSHOT
+    ports:
+      - "8081:8081"
+    depends_on:
+      - consul-server
+      - rabbitmq
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+      - ./init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+volumes:
+    consul_data:
+      driver: local
+    postgres:
+
+
+
