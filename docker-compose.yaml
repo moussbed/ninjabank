@@ -27,9 +27,12 @@ services:
 #      - RABBITMQ_USER_GID=${GID}
 
   backend-service:
-    image: moussbed/service-backend:0.0.1-SNAPSHOT
+    image: moussbed/service-backend:latest
     ports:
       - "8000:8000"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONSUL_CONFIG_IMPORT=optional:consul:consul-server:8500
     depends_on:
       - consul-server
 
@@ -37,6 +40,9 @@ services:
     image: moussbed/service-gateway:0.0.1-SNAPSHOT
     ports:
       - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONSUL_CONFIG_IMPORT=optional:consul:consul-server:8500
     depends_on:
       - consul-server
 
@@ -52,10 +58,22 @@ services:
     image: moussbed/service-transaction:0.0.1-SNAPSHOT
     ports:
       - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONSUL_CONFIG_IMPORT=optional:consul:consul-server:8500
     depends_on:
       - consul-server
       - rabbitmq
 
+  security-service:
+    image: moussbed/service-security:0.0.1-SNAPSHOT
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONSUL_CONFIG_IMPORT=optional:consul:consul-server:8500
+    depends_on:
+      - consul-server
   postgres:
     container_name: postgres
     image: postgres

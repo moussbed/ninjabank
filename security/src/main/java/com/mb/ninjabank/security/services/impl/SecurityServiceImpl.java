@@ -39,7 +39,7 @@ public class SecurityServiceImpl implements SecurityService {
         final JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 .subject(subject)
                 .issuedAt(now)
-                .expiresAt(now.plus(5, ChronoUnit.MINUTES))
+                .expiresAt(now.plus(45, ChronoUnit.MINUTES))
                 .issuer("Security service")
                 .claim("scope", scope)
                 .build();

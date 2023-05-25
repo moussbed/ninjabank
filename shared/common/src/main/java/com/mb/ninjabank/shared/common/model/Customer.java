@@ -2,6 +2,8 @@ package com.mb.ninjabank.shared.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToOne;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -22,6 +24,7 @@ public class Customer extends ID implements BasicEntity {
     @JsonProperty("modified_at")
     private LocalDateTime modifiedDate;
 
+    @Enumerated(EnumType.STRING)
     private Status status = Status.CREATED;
 
     private String email;

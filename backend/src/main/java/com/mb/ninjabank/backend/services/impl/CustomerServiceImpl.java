@@ -42,6 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.findAll()
                 .stream()
                 .map(CustomerMapper.MAPPER::customerToCustomerResponse)
+                .peek(System.out::println)
                 .toList();
     }
 
