@@ -1,22 +1,31 @@
 #!/usr/bin/env groovy
 
+def gv
+
 pipeline {
    agent any
    stages{
+      stage('Init') {
+          steps {
+               script {
+                  gv=load "script.groovy"
+               }
+          }
+      }
       stage('Build'){
          steps {
-             echo 'Building the application ...'
+             gv.buildApp()
          }
       }
 
       stage('test'){
          steps {
-            echo 'Testing the application ...'
+            gv.testApp()
          }
       }
       stage('deploy'){
           steps {
-            echo 'Deploying the application ...'
+            gv.deployApp()
           }
       }
    }
