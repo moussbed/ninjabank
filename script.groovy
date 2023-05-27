@@ -16,6 +16,12 @@ def buildJar(){
     echo 'Building jar ... '
     sh 'mvn clean package'
 }
+def buildImage(){
+    echo 'Building app docker ...'
+    ['backend','gateway', 'security', 'transaction'].each{service ->
+        sh "cd ${service} && docker build -t moussbed/service-${service}:${env.IMAGE_VERSION} ."
+    }
+}
 
 def testApp(){
     echo 'Testing the application ...'
