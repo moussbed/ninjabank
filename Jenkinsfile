@@ -5,6 +5,7 @@ def gv
 pipeline {
    agent any
    tools {
+     jdk   'jdk-17'
      maven 'maven-3.9.2'
    }
    stages{
@@ -27,6 +28,13 @@ pipeline {
            script{
              gv.buildJar()
            }
+         }
+      }
+      stage('Build image'){
+         steps {
+              script{
+                 gv.buildImage()
+              }
          }
       }
 
