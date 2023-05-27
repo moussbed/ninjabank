@@ -8,9 +8,6 @@ def testApp(){
 
 def deployApp(){
     echo 'Deploying the application ...'
-    ['backend', 'transaction'].each{ directory->
-          print(directory)
-    }
 }
 
 return this
