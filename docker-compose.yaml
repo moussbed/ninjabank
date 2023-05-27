@@ -27,7 +27,7 @@ services:
 #      - RABBITMQ_USER_GID=${GID}
 
   backend-service:
-    image: moussbed/service-backend:latest
+    image: moussbed/service-backend:${TAG}
     ports:
       - "8000:8000"
     environment:
@@ -37,7 +37,7 @@ services:
       - consul-server
 
   gateway-service:
-    image: moussbed/service-gateway:0.0.1-SNAPSHOT
+    image: moussbed/service-gateway:${TAG}
     ports:
       - "8080:8080"
     environment:
@@ -55,7 +55,7 @@ services:
       - rabbitmq
 
   transaction-service:
-    image: moussbed/service-transaction:0.0.1-SNAPSHOT
+    image: moussbed/service-transaction:${TAG}
     ports:
       - "8081:8081"
     environment:
@@ -66,7 +66,7 @@ services:
       - rabbitmq
 
   security-service:
-    image: moussbed/service-security:0.0.1-SNAPSHOT
+    image: moussbed/service-security:${TAG}
     ports:
       - "8082:8082"
     environment:
