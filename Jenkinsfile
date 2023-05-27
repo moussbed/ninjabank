@@ -37,6 +37,15 @@ pipeline {
               }
          }
       }
+      stage('Push image'){
+        steps {
+          script{
+            gv.dockerLogin()
+             gv.pushImage()
+          }
+        }
+      }
+
 
       stage('test'){
          steps {

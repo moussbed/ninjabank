@@ -23,6 +23,30 @@ def buildImage(){
     }
 }
 
+def dockerLogin(){
+    echo "Logging to docker hub repository ..."
+    withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS',
+            passwordVariable: 'PASS', usernameVariable: 'USER'
+    )]){
+        sh "docker login -u ${USER} -p ${PASS}"
+    }
+
+}
+def pushImage(){
+    echo 'Pushing docker Image to docker hub repository ...'
+    withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_CREDENTIALS',
+            passwordVariable: 'PASS', usernameVariable: 'USER'
+    )]){
+        ['backend','gateway', 'security', 'transaction'].each{service ->
+            def imageName = "moussbed/service-${service}:${env.IMAGE_VERSION}"
+            def latestImage =  "moussbed/service-${service}:latest"
+            sh "docker tag ${imageName} ${latestImage}"
+            sh "docker push ${imageName}"
+            sh "docker push ${latestImage}"
+        }
+    }
+}
+
 def testApp(){
     echo 'Testing the application ...'
 }
