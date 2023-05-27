@@ -47,12 +47,18 @@ def pushImage(){
     }
 }
 
-def testApp(){
-    echo 'Testing the application ...'
-}
-
 def deployApp(){
     echo 'Deploying the application ...'
+    def shellCmd = "bash ./server-cmds.sh ${env.IMAGE_VERSION}"
+    def server = "root@${env.SERVER_PUBLIC_IP}"
+    def directory = "/root"
+    sshagent(['LINODE_SERVER_KEY']){
+        sh "scp -o StrictHostKeyChecking=no server-cmds.sh ${server}:${directory}"
+        sh "scp -o StrictHostKeyChecking=no init-user-db.sh ${server}:${directory}"
+        sh "scp -o StrictHostKeyChecking=no ${env.DOCKER_COMPOSE_SECRET_FILE} ${server}:${directory}"
+        sh "scp -o StrictHostKeyChecking=no docker-compose.yaml ${server}:${directory}"
+        sh "ssh -o StrictHostKeyChecking=no ${server} ${shellCmd}"
+    }
 }
 
 return this

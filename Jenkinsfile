@@ -8,6 +8,10 @@ pipeline {
      jdk   'jdk-17'
      maven 'maven-3.9.2'
    }
+   environment{
+     SERVER_PUBLIC_IP = credentials('SERVER_PUBLIC_IP')
+     DOCKER_COMPOSE_SECRET_FILE = credentials('DOCKER_COMPOSE_SECRET_FILE')
+   }
    stages{
       stage('Init') {
           steps {
@@ -44,16 +48,6 @@ pipeline {
              gv.pushImage()
           }
         }
-      }
-
-
-      stage('test'){
-         steps {
-           script {
-             gv.testApp()
-           }
-
-         }
       }
       stage('deploy'){
           steps {
