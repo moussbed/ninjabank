@@ -22,10 +22,10 @@ pipeline {
            }
         }
       }
-      stage('Build'){
+      stage('Build jar'){
          steps {
            script{
-             gv.buildApp()
+             gv.buildJar()
            }
          }
       }
