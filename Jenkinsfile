@@ -63,6 +63,13 @@ pipeline {
           }
         }
       }
+      stage('Commit version updated'){
+        steps {
+          script {
+            gv.commitVersionUpdated()
+          }
+        }
+      }
    }
 
    post {

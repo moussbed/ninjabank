@@ -66,4 +66,29 @@ def updatePom(){
     sh "mvn versions:set -DnewVersion=${env.IMAGE_VERSION}"
     sh "mvn versions:commit"
 }
+
+def commitVersionUpdated(){
+    echo 'Commit version updated ...'
+    withCredentials([sshUserPrivateKey(credentialsId: 'GITHUB-PUSH-BUMP', keyFileVariable: 'keyFile')]){
+        sh 'mkdir -p ~/.ssh && cp ${keyFile} ~/.ssh/id_rsa'
+        sh 'git config user.email "jenkins@example.com"'
+        sh 'git config user.name "jenkins"'
+
+        sh 'git status'
+        sh 'git branch'
+        sh 'git config --list'
+
+        sh 'git remote -v'
+        sh 'git show-ref'
+
+        // Change https:// to ssh so we can push
+        // https://github.com/moussbed/ninjabank.git
+        // git@github.com:moussbed/ninjabank.git
+        sh 'git remote set-url origin `git remote get-url origin | sed -re "s%.+/([^/]+)/([^/]+)$%git@github.com:\\1/\\2%"`'
+        sh 'git log -p -2'
+        sh 'git add .'
+        sh 'git commit -m "ci: version bump"'
+        sh 'git push origin HEAD:jenkins-pipeline'
+    }
+}
 return this
