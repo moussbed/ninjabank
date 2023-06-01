@@ -56,6 +56,13 @@ pipeline {
             }
           }
       }
+      stage('Update maven pom '){
+        steps {
+          script {
+            gv.updatePom()
+          }
+        }
+      }
    }
 
    post {

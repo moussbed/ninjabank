@@ -61,4 +61,9 @@ def deployApp(){
     }
 }
 
+def updatePom(){
+    echo 'Updating version numbers of modules in a multi-module maven project'
+    sh "mvn versions:set -DnewVersion=${env.IMAGE_VERSION}"
+    sh "mvn versions:commit"
+}
 return this
